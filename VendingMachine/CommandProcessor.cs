@@ -110,7 +110,7 @@ namespace Command.CommandProcessor
 
                     if(items == null)
                     {
-                        callback("error", "Machine unable to dispatch items, contact admin");
+                        callback("error", "Machine unable to dispatch items, Item not found, please choose correct item id");
                     }
 
                     if (Convert.ToInt32(items?.Count) >= requiredQuantity)
