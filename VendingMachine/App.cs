@@ -43,8 +43,6 @@ namespace VendingMachineProgram
         {
             try
             {
-                Console.WriteLine(Convert.ToDouble(MaxLimits.AMOUNT));
-                
                 Thread tstart = new Thread(_viewHandler.CreateVendingmachineThread);
                 tstart.Start();
                 Console.WriteLine("Welcome to Food Court");
