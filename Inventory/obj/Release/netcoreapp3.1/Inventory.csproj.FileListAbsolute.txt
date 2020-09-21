@@ -1,0 +1,9 @@
+C:\Users\pryad\source\repos\ProjectVM\Inventory\bin\Release\netcoreapp3.1\Inventory.deps.json
+C:\Users\pryad\source\repos\ProjectVM\Inventory\bin\Release\netcoreapp3.1\Inventory.dll
+C:\Users\pryad\source\repos\ProjectVM\Inventory\bin\Release\netcoreapp3.1\Inventory.pdb
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.AssemblyInfoInputs.cache
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.AssemblyInfo.cs
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.csproj.CoreCompileInputs.cache
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.dll
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.pdb
+C:\Users\pryad\source\repos\ProjectVM\Inventory\obj\Release\netcoreapp3.1\Inventory.csprojAssemblyReference.cache

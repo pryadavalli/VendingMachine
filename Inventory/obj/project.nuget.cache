@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "+d9npdgDv3lMeNXZyqt7IC/ZjJD+OwJ6zL2YXw6+7LtB08ne3uhceaPdz25YqvFIWNbmP59LIIL6KeaMIu8z1Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\pryad\\source\\repos\\ProjectVM\\Inventory\\Inventory.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pryad\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
