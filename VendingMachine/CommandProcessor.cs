@@ -62,9 +62,16 @@ namespace Command.CommandProcessor
                     string amount = temp[1];
                     string itemid = temp[2];
 
+                   
+
                     float amountFloat = 0.0F;
                     bool bAmount = float.TryParse(temp[1], out amountFloat);
                  
+                    if(amountFloat <=0)
+                    {
+                        callback("error", "The payment cannot be zero or negative");
+                        return false;
+                    }
                     if (!bAmount)
                     {
                         callback("error", "The required amount is invalid, valid NUMBER should be entered");
@@ -84,7 +91,11 @@ namespace Command.CommandProcessor
                         callback("error", "The required ItemId is invalid, valid NUMBER should be entered");
                         return false;
                     }
-
+                    if (itemInt <= 0)
+                    {
+                        callback("error", "The item number cannot be zero or negative");
+                        return false;
+                    }
                     if (itemInt > Convert.ToInt32(MaxLimits.ITEMID))
                     {
                         callback("error", "Entered ItemID is beyond the  accepted range " + Convert.ToInt32(MaxLimits.ITEMID).ToString());
@@ -93,6 +104,12 @@ namespace Command.CommandProcessor
 
                     int requiredQuantity = 0;
                     bool bQ = int.TryParse(temp[3], out requiredQuantity);
+
+                    if (requiredQuantity <= 0)
+                    {
+                        callback("error", "The item number cannot be zero or negative");
+                        return false;
+                    }
                     if (!bQ)
                     {
                         callback("error", "The required quantity is invalid. valid NUMBER should be entered");
