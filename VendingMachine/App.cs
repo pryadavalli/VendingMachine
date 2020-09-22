@@ -27,19 +27,19 @@ namespace VendingMachineProgram
 
         public void Run()
         {
-            var logDirectory = _config.GetValue<string>("Runtime:LogOutputDirectory");
+          //  var logDirectory = _config.GetValue<string>("Runtime:LogOutputDirectory");
 
-            var log = new LoggerConfiguration()
-                        .WriteTo.Console()
-                        .WriteTo.File(logDirectory)
-                        .CreateLogger();
+            //var log = new LoggerConfiguration()
+            //            .WriteTo.Console()
+            //            .WriteTo.File(logDirectory)
+            //            .CreateLogger();
           
          //   log.Information("serilog logger information");
 
-            CommandPrompt(log);
+            CommandPrompt();
         }
 
-        public void CommandPrompt(Logger logger)
+        public void CommandPrompt()
         {
             try
             {
@@ -69,7 +69,7 @@ namespace VendingMachineProgram
             }
             catch (Exception ex)
             {
-                logger.Error(ex.StackTrace.ToString());
+               // logger.Error(ex.StackTrace.ToString());
                 Console.WriteLine("Application got into error, please contact Admin " + ex.Message);
             }
         }
