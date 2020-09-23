@@ -1,10 +1,9 @@
 ﻿using Inventory.Enums;
 using InventorySpace;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InventorySupplier
@@ -53,21 +52,45 @@ namespace InventorySupplier
         {
             Task loadTask = Task.Run(() =>
             {
+                string str = Directory.GetCurrentDirectory();
+                bool b = File.Exists("inventory.json");
+
                 if (File.Exists("inventory.json"))
                 {
                     using (StreamReader r = new StreamReader("inventory.json"))
                     {
                         string json = r.ReadToEnd();
-                        inventories = JsonConvert.DeserializeObject<List<Stock>>(json);
+                       var localInventories = JsonConvert.DeserializeObject<List<Stock>>(json);
+
+                        CreateConsolidatedList(localInventories);
                     }
                 }
             });
             await loadTask;
             return inventories;
         }
+
+        private void CreateConsolidatedList(List<Stock> localInventories)
+        {
+            var items = localInventories?.GroupBy(x => x.ItemID)
+                            .Select(x => new
+                            {
+                                count = x.Count(),
+                                Key = x.Key
+                            });
+
+            foreach (var item in items)
+            {
+                var temp = localInventories.Where(x => x.ItemID == item.Key).Select(x => x).FirstOrDefault();
+                temp.Count = item.count.ToString();
+                inventories.Add(temp);
+            }
+
+           // return inventories;
+        }
         public async Task<List<Stock>> CreateSampleDataMemory()
         {
-            List<Stock> inventories = new List<Stock>();
+            List<Stock> localInventories = new List<Stock>();
             Task loadTask = Task.Run(() =>
             {
                 Stock coke = new Stock()
@@ -98,22 +121,23 @@ namespace InventorySupplier
 
                 for (int i = 0; i < 10; i++)
                 {
-                    inventories.Add(coke);
+                    localInventories.Add(coke);
                 }
                 for (int i = 0; i < 15; i++)
                 {
-                    inventories.Add(MnM);
+                    localInventories.Add(MnM);
                 }
                 for (int i = 0; i < 5; i++)
                 {
-                    inventories.Add(Water);
+                    localInventories.Add(Water);
                 }
                 for (int i = 0; i < 7; i++)
                 {
-                    inventories.Add(Snickers);
+                    localInventories.Add(Snickers);
                 }
             });
             await loadTask;
+            CreateConsolidatedList(localInventories);
             return inventories;
         }
     }

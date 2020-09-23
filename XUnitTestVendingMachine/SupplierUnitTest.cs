@@ -3,6 +3,8 @@ using InventorySupplier;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,7 +22,7 @@ namespace XUnitTestVendingMachine
         }
         [Fact(DisplayName = " Create Fake object and check against inventory creation")]
         // This requires some improvements.
-        public void Test1()
+        public async Task Test1()
         {
             //arrange
             List<Stock> tempStock = new List<Stock>();
@@ -37,10 +39,10 @@ namespace XUnitTestVendingMachine
 
             //act
             var vmitems = sup.CreateInventory();
-            var stocklist = sup.GetInventory();
+            var stocklist =   sup.GetInventory();
 
             //assert
-            Assert.True(stocklist.Count == 4);
+            Assert.True(stocklist.Count == 1);
         }
 
         [Fact]

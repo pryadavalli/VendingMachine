@@ -16,7 +16,7 @@ namespace VendingMachineSpace
         void CreateVendingMachine(Action<string> callbackforSystemReady);
         List<Stock> GetAllQuantities();
         Stock GetProduct(string item);
-        void DispatchItem(string item, int quantity);
+       bool DispatchItem(string item, int quantity);
     }
     public class VendingMachine:IVendingMachine
     {
@@ -29,7 +29,6 @@ namespace VendingMachineSpace
         }
         public   void CreateVendingMachine(Action<string> callbackforSystemReady)
         {
-           
             Task<int> inventoryCreationTask = isupplier.CreateInventory();
             inventoryCreationTask.Wait();
             stockList = isupplier.GetInventory();
@@ -52,13 +51,17 @@ namespace VendingMachineSpace
             }
         }
 
-        public   void DispatchItem(string item,int quantity)
+        public   bool DispatchItem(string item,int quantity)
         {
+           
             lock (lockobject)
             {
                 var test = stockList.Where(x => x.ItemID == item).ToList().FirstOrDefault();
                 test.Count = (Convert.ToInt32(test.Count) - quantity).ToString();
-            }
+
+                if (test != null) return true;
+                else return false;
+             }
         }
     }
 }

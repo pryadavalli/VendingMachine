@@ -2,10 +2,7 @@
 using Inventory.Enums;
 using InventorySupplier;
 using Microsoft.Extensions.Configuration;
-using Serilog;
-using Serilog.Core;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using VendingMachineConsole;
 using VendingMachineSpace;
@@ -22,7 +19,8 @@ namespace VendingMachineProgram
             
         {
             _config = config;
-             _viewHandler = new ViewHandler(supplier,vendingMachine, stockProvider,commandProcessor);
+            var dataProvider = _config.GetValue<ProviderType>("Runtime:DataProvider");
+            _viewHandler = new ViewHandler(supplier,vendingMachine, stockProvider,commandProcessor, dataProvider);
         }
 
         public void Run()
@@ -47,8 +45,6 @@ namespace VendingMachineProgram
                 tstart.Start();
                 Console.WriteLine("Welcome to Food Court");
                 Console.WriteLine("PLACE THE ORDER \n");
-               // Console.WriteLine("Input text should be: order <amount> <item> <quantity> \n");
-                //
                 string cmdInput = string.Empty;
                 while (cmdInput != "exit")
                 {
@@ -69,7 +65,6 @@ namespace VendingMachineProgram
             }
             catch (Exception ex)
             {
-               // logger.Error(ex.StackTrace.ToString());
                 Console.WriteLine("Application got into error, please contact Admin " + ex.Message);
             }
         }

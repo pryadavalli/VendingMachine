@@ -61,9 +61,6 @@ namespace Command.CommandProcessor
                 {
                     string amount = temp[1];
                     string itemid = temp[2];
-
-                   
-
                     float amountFloat = 0.0F;
                     bool bAmount = float.TryParse(temp[1], out amountFloat);
                  
@@ -123,8 +120,8 @@ namespace Command.CommandProcessor
                     }
 
 
-                    var items =   _vendingMachine.GetProduct(itemid);
-
+                    var items =    _vendingMachine.GetProduct(itemid);
+                    
                     if(items == null)
                     {
                         callback("error", "Machine unable to dispatch items, Item not found, please choose correct item id");
@@ -148,13 +145,20 @@ namespace Command.CommandProcessor
                         }
                         else
                         {
-                            _vendingMachine.DispatchItem(itemid, requiredQuantity);
-                            callback("order", "Order is successful - " + items.ItemName + " Payment is completed  - " + requiredQuantity + " items - $ " + cost.ToString());
+                           bool bSuccess =  _vendingMachine.DispatchItem(itemid, requiredQuantity);
 
-                            float balance = amountFloat - cost;
-                            if ( balance > 0.0F)
+                            if (bSuccess)
                             {
-                                callback("order", "Please collect the balance cash $" + balance.ToString());
+                                callback("order", "Order is successful - " + items.ItemName + " Payment is completed  - " + requiredQuantity + " items - $ " + cost.ToString());
+                                float balance = amountFloat - cost;
+                                if (balance > 0.0F)
+                                {
+                                    callback("order", "Please collect the balance cash $" + balance.ToString());
+                                }
+                            }
+                            else
+                            {
+                                callback("error", "cannot dispatch the item as the item is not found");
                             }
                         }
                     }

@@ -1,4 +1,5 @@
 ﻿using Command.CommandProcessor;
+using Inventory.Enums;
 using InventorySupplier;
 using System;
 using System.Linq;
@@ -12,18 +13,18 @@ namespace VendingMachineConsole
        public   ISupplier isupplier; 
        public   IVendingMachine ivMachine; 
        public   ICommandProcessor icommandProcessor; 
-        public  bool IsVendingMachineReady = false;
+       public   bool IsVendingMachineReady = false;
        
         public   ViewHandler(ISupplier supplier,
             IVendingMachine vendingMachine,
-            IStockProvider stockProvider, ICommandProcessor commandProcessor)
+            IStockProvider stockProvider, ICommandProcessor commandProcessor, ProviderType providerType)
         {
             IsVendingMachineReady = false;
             isupplier = supplier;
             isource = stockProvider;
             ivMachine = vendingMachine;
             icommandProcessor = commandProcessor;
-            isource.SetStockProvider(Inventory.Enums.ProviderType.InMemory);
+            isource.SetStockProvider(providerType);
         }
         public   void CreateVendingmachineThread()
         {
@@ -61,6 +62,7 @@ namespace VendingMachineConsole
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(str);
             Console.ResetColor();
+          
         }
 
         private   void DisplayDashboard()
