@@ -21,31 +21,6 @@ namespace InventorySupplier
             _provider = provider;
         }
 
-        /// <summary>
-        /// Count the total values while loading to Vending machine
-        /// feed the count to the system
-        /// </summary>
-        /// <returns></returns>
-        //private List<Stock> CountStock()
-        //{
-        //    List<Stock> vendingMachine = new List<Stock>();
-        //    var items = inventories?.GroupBy(x => x.ItemID)
-        //           .Select(x => new
-        //           {
-        //               count = x.Count(),
-        //               Key = x.Key
-        //           });
-
-        //    foreach (var item in inventories?.Distinct())
-        //    {
-        //        var test = items.Where(x => x.Key == item.ItemID).ToList().FirstOrDefault();
-        //        item.Count = test.count.ToString();
-        //        vendingMachine.Add(item);
-        //    }
-
-        //    return vendingMachine;
-        //}
-
         public async Task<int> CreateInventory()
         {
             vendingMachineItems.Clear();

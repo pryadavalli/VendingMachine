@@ -6,14 +6,16 @@ using System.Text;
 using VendingMachineSpace;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace Command.CommandProcessor
 {
     public interface ICommandProcessor
     {
-        public   bool ExecuteCommand(string commandParams, Action<string,string> func);
-        public bool AddCommand(string newCommand, string description);
-        public Dictionary<string,string> help();
+            bool ExecuteCommand(string commandParams, Action<string,string> func);
+          bool AddCommand(string newCommand, string description);
+          Dictionary<string,string> help();
+        string BillDispenser(float balance);
 
     }
     public class CommandProcessor : ICommandProcessor
@@ -160,9 +162,12 @@ namespace Command.CommandProcessor
                             {
                                 callback("order", "Order is successful - " + items.ItemName + " Payment is completed  - " + requiredQuantity + " items - $ " + cost.ToString());
                                 float balance = amountFloat - cost;
-                                if (balance > 0.0F)
+
+                                if (balance > 0.00F)
                                 {
-                                    callback("order", "Please collect the balance cash $" + balance.ToString());
+                                    callback("order", "Please collect the below dispensed cash $" + balance.ToString());
+                                    string dispMoney = BillDispenser(balance);
+                                    callback("order", dispMoney);
                                 }
                             }
                             else
@@ -192,6 +197,26 @@ namespace Command.CommandProcessor
                 callback("error", commandParams + " =>Invalid command, please see the help by typing ? and press enter");
             }
             return true;
+        }
+
+        public string BillDispenser(float balance)
+        {
+            var tempFraction = Math.Round((float)(balance * 100));
+            int result = (int)(tempFraction % 100);
+            int no_of_quarts = (result - (int)result % 25) / 25;
+           // Console.WriteLine("No of quarts =" + no_of_quarts);
+            int no_of_dimes = ((int)result - 25 * no_of_quarts) / 10;
+          // Console.WriteLine("No of dimes =" + no_of_dimes);
+
+            int no_ofnickels = ((int)result - 25 * no_of_quarts - 10 * no_of_dimes - (int)(result % 5)) / 5;
+           // Console.WriteLine("No of nickels =" + no_ofnickels);
+
+            int no_ofcents = ((int)result - 25 * no_of_quarts - 10 * no_of_dimes - 5 * no_ofnickels);
+           // Console.WriteLine("No of cents =" + no_ofcents);
+
+            string str = no_of_quarts + " Quarts - " + no_of_dimes + " Dimes -" + no_ofnickels + " Nickels - " + no_ofcents + " Cents";
+
+            return str;
         }
 
       
