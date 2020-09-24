@@ -37,12 +37,12 @@ namespace VendingMachineProgram
         ViewHandler _viewHandler;
         public App(IConfiguration config, ISupplier supplier,
             IVendingMachine vendingMachine,  
-            IStockProvider stockProvider, ICommandProcessor commandProcessor)
+            IStockProvider stockProvider, ICommandFactory icommandFactory)
             
         {
             _config = config;
             var dataProvider = _config.GetValue<ProviderType>("Runtime:DataProvider");
-            _viewHandler = new ViewHandler(supplier,vendingMachine, stockProvider,commandProcessor, dataProvider);
+            _viewHandler = new ViewHandler(supplier,vendingMachine, stockProvider, icommandFactory, dataProvider);
         }
 
         public void Run()
@@ -76,7 +76,7 @@ namespace VendingMachineProgram
                     {
                         if (_viewHandler.IsVendingMachineReady)
                         {
-                            _viewHandler.icommandProcessor.ExecuteCommand(cmdInput, _viewHandler.CommandResultCallBack);
+                            _viewHandler.icommandFactory.ExecuteCommand(cmdInput, _viewHandler.CommandResultCallBack);
                         }
                         else
                         {

@@ -12,18 +12,18 @@ namespace VendingMachineViewHandler
        public   IStockProvider isource; 
        public   ISupplier isupplier; 
        public   IVendingMachine ivMachine; 
-       public   ICommandProcessor icommandProcessor; 
+       public   ICommandFactory icommandFactory; 
        public   bool IsVendingMachineReady = false;
        
         public   ViewHandler(ISupplier supplier,
             IVendingMachine vendingMachine,
-            IStockProvider stockProvider, ICommandProcessor commandProcessor, ProviderType providerType)
+            IStockProvider stockProvider, ICommandFactory commandFactory, ProviderType providerType)
         {
             IsVendingMachineReady = false;
             isupplier = supplier;
             isource = stockProvider;
             ivMachine = vendingMachine;
-            icommandProcessor = commandProcessor;
+            icommandFactory = commandFactory;
             isource.SetStockProvider(providerType);
         }
         public   void CreateVendingmachineThread()
@@ -55,7 +55,6 @@ namespace VendingMachineViewHandler
                     break;
             }
         }
-
         private   void ShowError(string str)
         {
             Console.BackgroundColor = ConsoleColor.Red;
@@ -75,20 +74,18 @@ namespace VendingMachineViewHandler
             }
             Console.ResetColor();
         }
-
-
         private   void OrderResponse(string response)
         {
             Console.BackgroundColor = ConsoleColor.Green;
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("Status:" + response);
+            Console.WriteLine(response);
             Console.ResetColor();
         }
         private   void Help(string response)
         {
             Console.BackgroundColor = ConsoleColor.Cyan;
             Console.ForegroundColor = ConsoleColor.Black;
-            var commands = icommandProcessor.help().ToList();
+            var commands = icommandFactory.help().ToList();
 
             foreach (var item in commands)
             {

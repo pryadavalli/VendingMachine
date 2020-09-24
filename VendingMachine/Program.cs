@@ -15,22 +15,19 @@ namespace VendingMachineProgram
             var services = ConfigurationServices();
             var serviceProvider = services.BuildServiceProvider();
             serviceProvider.GetService<App>().Run();
-
             System.Console.WriteLine("Application is shutting down....");
         }
-
         private static IServiceCollection ConfigurationServices()
         {
             IServiceCollection services = new ServiceCollection();
             var config = LoadConfiguration();
-
             services.AddSingleton(config);
             services.AddTransient<App>();
             services.AddLogging(config => config.AddSerilog());
             services.AddTransient<IStockProvider, StockProvider>();
             services.AddTransient<ISupplier, Supplier>();
             services.AddTransient<IVendingMachine, VendingMachine>();
-            services.AddTransient<ICommandProcessor, CommandProcessor>();
+            services.AddTransient<ICommandFactory, CommandFactory>();
             return services;
         }
 

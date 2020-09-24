@@ -18,14 +18,14 @@ namespace XUnitTestVendingMachine
     public class CommandProcessUnitTest
     {
         public Dictionary<string, string> commandList = new Dictionary<string, string>();
-        ICommandProcessor icommandProcessor;
+        ICommandFactory icommandFactory;
         static IStockProvider isource = new StockProvider(Inventory.Enums.ProviderType.InMemory);
         static ISupplier isupplier = new Supplier(isource);
         IVendingMachine vendingMachine = new VendingMachine(isupplier);
 
         public CommandProcessUnitTest()
         {
-            icommandProcessor = new CommandProcessor(vendingMachine);
+            icommandFactory = new CommandFactory(vendingMachine);
             commandList.Add("inv", "inv");
             commandList.Add("cls", "clear");
             commandList.Add("?", "help");
@@ -42,7 +42,7 @@ namespace XUnitTestVendingMachine
         [Fact(DisplayName = "Check all commands exist")]
         public void Test1()
         {
-            var commandcount = icommandProcessor.help().Count;
+            var commandcount = icommandFactory.help().Count;
 
             Assert.True(commandcount == 4);
         }
@@ -50,7 +50,7 @@ namespace XUnitTestVendingMachine
         [Fact]
         public void Test2()
         {
-            var actualcommands = icommandProcessor.help();
+            var actualcommands = icommandFactory.help();
             bool bexists = actualcommands.All(x => commandList.ContainsKey(x.Key));
             Assert.True(bexists);
         }
@@ -58,15 +58,14 @@ namespace XUnitTestVendingMachine
         public void Test3()
         {
             string cmdparam = "inv";
-            bool bValue = icommandProcessor.ExecuteCommand(cmdparam, CommandResultCallBack);
-
+            bool bValue = icommandFactory.ExecuteCommand(cmdparam, CommandResultCallBack);
 
             Assert.True(bValue);
         }
         private void CommandResultCallBack(string code, string description)
         {
             string cmd = "inv";
-            string desc = "Lists the inventory";
+            string desc = "Show the inventory";
 
             Assert.True(commandList.ContainsKey(code));
             Assert.True(cmd.Equals(code) && desc.Equals(description));
@@ -90,7 +89,7 @@ namespace XUnitTestVendingMachine
             mockCmd.Setup(x => x.CreateVendingMachine(machineReadyCallback));
             mockCmd.Setup(x => x.GetProduct("1")).Returns(sample);
 
-            ICommandProcessor icommandProcessorLocal = new CommandProcessor(mockCmd.Object);
+            ICommandFactory icommandProcessorLocal = new CommandFactory(mockCmd.Object);
             bool bValue = icommandProcessorLocal.ExecuteCommand(cmdparam, CommandResultCallBackDummy);
             Assert.True(bValue);
         }
@@ -110,8 +109,8 @@ namespace XUnitTestVendingMachine
         {
             string cmdInput = "order 17 1 5";
 
-            Parallel.Invoke(() => { icommandProcessor.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); },
-                () => { icommandProcessor.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); }
+            Parallel.Invoke(() => { icommandFactory.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); },
+                () => { icommandFactory.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); }
                 );
         }
 
@@ -142,9 +141,11 @@ namespace XUnitTestVendingMachine
             int dime = 1;
             int nickel = 1;
             int cent = 2;
-            float finput =(float)(quart * 25 + dime * 10 + nickel * 5 + cent * 1)/100;
-            var result =  icommandProcessor.BillDispenser(finput);
-            string expected = quart + " Quarts - " + dime + " Dimes - " + nickel + " Nickels - " + cent + " Cents";
+            float finput = (float)(quart * 25 + dime * 10 + nickel * 5 + cent * 1) / 100;
+
+            OrderCommand command = new OrderCommand();
+            var result = command.BillDispenser(finput);
+            string expected = quart +" Quarts - "+ dime +" Dimes - "+ nickel +" Nickels - "+ cent +" Cents";
             Assert.Equal(expected, result);
         }
     }
