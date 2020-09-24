@@ -16,13 +16,13 @@ namespace VendingMachineSpace
         void CreateVendingMachine(Action<string> callbackforSystemReady);
         List<Stock> GetAllQuantities();
         Stock GetProduct(string item);
-       bool DispatchItem(string item, int quantity);
+       bool DispatchItem(string item, int quantity,out string  responseStr);
     }
     public class VendingMachine:IVendingMachine
     {
         static List<Stock> stockList = new List<Stock>();
         ISupplier isupplier;
-        private   object lockobject = new object();
+        private static  object lockobject = new object();
         public VendingMachine(ISupplier _supplier)
         {
             isupplier = _supplier;// new Supplier(isource);
@@ -51,13 +51,22 @@ namespace VendingMachineSpace
             }
         }
 
-        public   bool DispatchItem(string item,int quantity)
+        public   bool DispatchItem(string item,int quantity,out string response)
         {
            
             lock (lockobject)
             {
+                response = "";
                 var test = stockList.Where(x => x.ItemID == item).ToList().FirstOrDefault();
-                test.Count = (Convert.ToInt32(test.Count) - quantity).ToString();
+                if (Convert.ToInt32(test.Count) - quantity >= 0)
+                {
+                    test.Count = (Convert.ToInt32(test.Count) - quantity).ToString();
+                }
+                else
+                {
+                    response = "The requested quanity :" + quantity + " is more than available quantity :" + Convert.ToInt32(test.Count);
+                    return false;
+                }
 
                 if (test != null) return true;
                 else return false;

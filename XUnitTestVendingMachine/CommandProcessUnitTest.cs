@@ -9,6 +9,8 @@ using Xunit;
 using Command.CommandProcessor;
 using System.Linq;
 using VendingMachineSpace;
+using System.Threading;
+using VendingMachineProgram;
 
 namespace XUnitTestVendingMachine
 {
@@ -55,10 +57,10 @@ namespace XUnitTestVendingMachine
         public void Test3()
         {
             string cmdparam = "inv";
-            Task<bool> bValue = icommandProcessor.ExecuteCommand(cmdparam, CommandResultCallBack);
+            bool bValue = icommandProcessor.ExecuteCommand(cmdparam, CommandResultCallBack);
 
           
-            Assert.True(bValue.Result);
+            Assert.True(bValue);
         }
         private void CommandResultCallBack(string code, string description)
         {
@@ -88,8 +90,8 @@ namespace XUnitTestVendingMachine
             mockCmd.Setup(x => x.GetProduct("1")).Returns(sample);
 
             ICommandProcessor icommandProcessorLocal = new CommandProcessor(mockCmd.Object);
-            Task<bool> bValue = icommandProcessorLocal.ExecuteCommand(cmdparam, CommandResultCallBackDummy);
-            Assert.True(bValue.Result);
+            bool bValue = icommandProcessorLocal.ExecuteCommand(cmdparam, CommandResultCallBackDummy);
+            Assert.True(bValue);
         }
         private void CommandResultCallBackDummy(string code, string description)
         {
@@ -97,6 +99,20 @@ namespace XUnitTestVendingMachine
 
         }
 
+        private void CommandResultCallBackParallelPRocess(string code, string description)
+        {
+            LoggerEx.LogInformation(description);
+            Assert.Equal("order", code);
+        }
+        [Fact]
+        public void ParallelProcess()
+        {
+            string cmdInput = "order 12 1 5";
+
+            Parallel.Invoke(() => { icommandProcessor.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); },
+                () => { icommandProcessor.ExecuteCommand(cmdInput, CommandResultCallBackParallelPRocess); }
+                );
+        }
 
     }
 }

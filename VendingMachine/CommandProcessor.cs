@@ -11,7 +11,7 @@ namespace Command.CommandProcessor
 {
     public interface ICommandProcessor
     {
-        public   Task<bool> ExecuteCommand(string commandParams, Action<string,string> func);
+        public   bool ExecuteCommand(string commandParams, Action<string,string> func);
         public bool AddCommand(string newCommand, string description);
         public Dictionary<string,string> help();
 
@@ -34,14 +34,17 @@ namespace Command.CommandProcessor
             commandList.Add(newCommand, description);
             return true;
         }
-
+        public Dictionary<string, string> help()
+        {
+            return commandList;
+        }
         /// <summary>
         /// This function can go for Command design pattern
         /// </summary>
         /// <param name="commandParams"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public async Task<bool> ExecuteCommand(string commandParams, Action<string,string> callback)
+        public bool ExecuteCommand(string commandParams, Action<string,string> callback)
         {
             var temp = commandParams.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -145,7 +148,13 @@ namespace Command.CommandProcessor
                         }
                         else
                         {
-                           bool bSuccess =  _vendingMachine.DispatchItem(itemid, requiredQuantity);
+                           string responseStr;
+                           bool bSuccess =  _vendingMachine.DispatchItem(itemid, requiredQuantity, out responseStr);
+
+                            if(!string.IsNullOrEmpty(responseStr))
+                            {
+                                callback("error", responseStr);
+                            }
 
                             if (bSuccess)
                             {
@@ -185,9 +194,6 @@ namespace Command.CommandProcessor
             return true;
         }
 
-        public Dictionary<string,string> help()
-        {
-            return commandList;
-        }
+      
     }
 }

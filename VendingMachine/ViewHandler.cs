@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using VendingMachineSpace;
 
-namespace VendingMachineConsole
+namespace VendingMachineViewHandler
 {
     public class ViewHandler
     {

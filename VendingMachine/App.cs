@@ -2,13 +2,35 @@
 using Inventory.Enums;
 using InventorySupplier;
 using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Core;
 using System;
 using System.Threading;
-using VendingMachineConsole;
 using VendingMachineSpace;
+using VendingMachineViewHandler;
 
 namespace VendingMachineProgram
 {
+    public static class LoggerEx
+    {
+        static Logger loggerConfiguration;
+
+         static LoggerEx()
+        {
+           var _config =  Program.LoadConfiguration();
+            var logDirectory = _config.GetValue<string>("Runtime:LogOutputDirectory");
+
+            loggerConfiguration = new LoggerConfiguration()
+                        .WriteTo.Console()
+                        .WriteTo.File(logDirectory)
+                        .CreateLogger();
+        }
+        public static void LogInformation(string str)
+        {
+            loggerConfiguration.Information(str);
+        }
+      
+    }
     public class App
     {
         private readonly IConfiguration _config;
@@ -25,14 +47,14 @@ namespace VendingMachineProgram
 
         public void Run()
         {
-          //  var logDirectory = _config.GetValue<string>("Runtime:LogOutputDirectory");
+            var logDirectory = _config.GetValue<string>("Runtime:LogOutputDirectory");
 
-            //var log = new LoggerConfiguration()
-            //            .WriteTo.Console()
-            //            .WriteTo.File(logDirectory)
-            //            .CreateLogger();
-          
-         //   log.Information("serilog logger information");
+            var log = new LoggerConfiguration()
+                        .WriteTo.Console()
+                        .WriteTo.File(logDirectory)
+                        .CreateLogger();
+
+            log.Information("serilog logger information");
 
             CommandPrompt();
         }
